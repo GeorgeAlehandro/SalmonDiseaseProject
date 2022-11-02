@@ -9,7 +9,76 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
+Let's suppose 10 samples: 5 healthy salmons - 5 infected by a virus
+12 genes: 6 showing differences - 6 indifferent
+
 ```{r}
+simulate_indifferent <- function(){
+  rnorm(10, 5, 1)
+}
+
+simulate_different <- function(){
+  c(rnorm(5, 5, 1), rnorm(5,80,10))
+}
+```
+
+
+
+```{r}
+df <- data.frame(row.names = c("H1","H2","H3","H4","H5","S1", "S2", "S3", "S4", "S5"))
+
+df$TE21 <-simulate_indifferent()
+df$AKN2 <-simulate_indifferent()
+df$CTF3 <-simulate_indifferent()
+df$GAN <-simulate_indifferent()
+df$ZAM3 <-simulate_indifferent()
+df$NAE1 <-simulate_different()
+df$NEDD8 <-simulate_different()
+df$COM9 <-simulate_different()
+df$ADD3 <-simulate_different()
+df$ERTS <-simulate_different()
 
 ```
 
+```{r}
+library("NMF")
+```
+
+```{r}
+nmf_result <- nmf(df, rank = 2)
+```
+
+```{r}
+fitted_result <- fitted(nmf_result)
+```
+
+```{r}
+w<-basis(nmf_result) 
+dim(w) #getmatrixH
+h<-coef(nmf_result)
+```
+
+```{r}
+#onlycomputethescores 
+s<-featureScore(nmf_result) 
+summary(s) #computethescoresandcharacterizeeachmetagene 
+s<-extractFeatures(nmf_result) 
+str(s)
+```
+
+```{r}
+consensusmap(nmf_result,annCol=df,labCol=colnames(df),labRow=rownames(df))
+```
+
+```{r}
+estim.r <- nmf(df, 2:6, nrun=10, seed=123456)
+```
+
+```{r}
+plot(estim.r)
+```
+```{r}
+consensusmap(estim.r,annCol=df,labCol=NA,labRow=NA)
+
+```
