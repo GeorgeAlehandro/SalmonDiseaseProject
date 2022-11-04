@@ -18,8 +18,12 @@ simulate_indifferent <- function(){
   rnorm(10, 5, 1)
 }
 
-simulate_different <- function(){
-  c(rnorm(5, 5, 1), rnorm(5,80,10))
+simulate_different_upregulated <- function(){
+  c(rnorm(5, 5, 1), rnorm(2,30,10), rnorm(3,80,10))
+}
+
+simulate_different_downregulated <- function(){
+  c(rnorm(5,40,10), rnorm(5, 5, 1))
 }
 ```
 
@@ -27,17 +31,24 @@ simulate_different <- function(){
 
 ```{r}
 df <- data.frame(row.names = c("H1","H2","H3","H4","H5","S1", "S2", "S3", "S4", "S5"))
-
+#Simulating indifferent genes
 df$TE21 <-simulate_indifferent()
 df$AKN2 <-simulate_indifferent()
 df$CTF3 <-simulate_indifferent()
 df$GAN <-simulate_indifferent()
 df$ZAM3 <-simulate_indifferent()
-df$NAE1 <-simulate_different()
-df$NEDD8 <-simulate_different()
-df$COM9 <-simulate_different()
-df$ADD3 <-simulate_different()
-df$ERTS <-simulate_different()
+#Simulating upregulated genes in the case of virus
+df$NAE1 <-simulate_different_upregulated()
+df$NEDD8 <-simulate_different_upregulated()
+df$COM9 <-simulate_different_upregulated()
+df$ADD3 <-simulate_different_upregulated()
+df$ERTS <-simulate_different_upregulated()
+#Simulating downregulated genes in the case of virus
+df$SADE <-simulate_different_downregulated()
+df$FFDC <-simulate_different_downregulated()
+df$LOF3 <-simulate_different_downregulated()
+df$CSF <-simulate_different_downregulated()
+df$IRK <-simulate_different_downregulated()
 
 ```
 
@@ -46,7 +57,7 @@ library("NMF")
 ```
 
 ```{r}
-nmf_result <- nmf(df, rank = 2)
+nmf_result <- nmf(df, rank = 3)
 ```
 
 ```{r}
@@ -68,17 +79,7 @@ str(s)
 ```
 
 ```{r}
-consensusmap(nmf_result,annCol=df,labCol=colnames(df),labRow=rownames(df))
+consensusmap(nmf_result, annCol = df, labCol=NA,labRow=colnames(df))
 ```
 
-```{r}
-estim.r <- nmf(df, 2:6, nrun=10, seed=123456)
-```
 
-```{r}
-plot(estim.r)
-```
-```{r}
-consensusmap(estim.r,annCol=df,labCol=NA,labRow=NA)
-
-```
