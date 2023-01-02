@@ -33,8 +33,10 @@ simulate_different_downregulated <- function(){
 df <- data.frame(row.names = c("H1","H2","H3","H4","H5","S1", "S2", "S3", "S4", "S5"))
 #Simulating indifferent genes
 df$TE21 <-simulate_indifferent()
-
-
+df$AKN2 <-simulate_indifferent()
+df$CTF3 <-simulate_indifferent()
+df$GAN <-simulate_indifferent()
+df$ZAM3 <-simulate_indifferent()
 #Simulating upregulated genes in the case of virus
 df$NAE1 <-simulate_different_upregulated()
 df$NEDD8 <-simulate_different_upregulated()
@@ -47,7 +49,7 @@ df$FFDC <-simulate_different_downregulated()
 df$LOF3 <-simulate_different_downregulated()
 df$CSF <-simulate_different_downregulated()
 df$IRK <-simulate_different_downregulated()
-df
+head(df)
 ```
 
 ```{r}
@@ -69,9 +71,8 @@ h<-coef(nmf_result)
 ```
 
 ```{r}
-#onlycomputethescores 
 s<-featureScore(nmf_result) 
-summary(s) #computethescoresandcharacterizeeachmetagene 
+summary(s)
 s<-extractFeatures(nmf_result) 
 str(s)
 ```
